@@ -1,0 +1,14 @@
+var dialogue = {
+  "CharacterA": {
+    1: "Where am I?",
+    3: "Like the game...?",
+    5: "Why am I here?",
+    7: "This will be a breeze! I’ve played this game many times."
+  },
+  "BlueMascot": {
+    2: "Welcome to Pacland!",
+    4: "Yes! Your favorite game, CharacterA!",
+    6: "Well, our game is currently in danger, and since you like the game so much, you have been chosen to defend our lands and retrieve the relics from each level to defeat the boss and save our game from corruption.",
+    8: "I’m sure you have, but the mechanics outside of the screen and inside of the screen will be different, let me give you a rundown of our mechanics. Use W to move up, A to move left, D to move right, and S to move down, try and complete this maze. Use Space to attack. Kill the ghost."
+  }
+};
