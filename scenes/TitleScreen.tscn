@@ -1,0 +1,146 @@
+[gd_scene load_steps=18 format=3 uid="uid://b4qhx7jwrdhi5"]
+
+[ext_resource type="Texture2D" uid="uid://cdes2x7unl3t8" path="res://assets/pixil-frame-0.png" id="1_vgpej"]
+[ext_resource type="Texture2D" uid="uid://de0tcy8wgddeb" path="res://assets/New Piskel (6).png" id="2_j80wd"]
+[ext_resource type="Texture2D" uid="uid://cag8c5hbqap67" path="res://assets/scifi.png" id="2_whwc8"]
+[ext_resource type="Script" path="res://scripts/animated_sprite_2d.gd" id="3_syqn5"]
+[ext_resource type="Script" path="res://scripts/button.gd" id="5_pay8t"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4d67g"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a607v"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m7wir"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7lae4"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_57sq7"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gurfg"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sfssg"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ymtah"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_61u8y"]
+atlas = ExtResource("2_j80wd")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lk62g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4d67g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a607v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m7wir")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7lae4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_57sq7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gurfg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sfssg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ymtah")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_61u8y")
+}],
+"loop": true,
+"name": &"run",
+"speed": 18.0
+}]
+
+[sub_resource type="SystemFont" id="SystemFont_ip41y"]
+font_weight = 500
+font_stretch = 150
+
+[sub_resource type="SystemFont" id="SystemFont_knx4o"]
+font_italic = true
+font_stretch = 125
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(337, 151)
+scale = Vector2(7.33, 3.38)
+texture = ExtResource("1_vgpej")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(368, 61)
+scale = Vector2(0.170564, 0.172852)
+texture = ExtResource("2_whwc8")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(28, -15)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CharacterBody2D"]
+build_mode = 1
+polygon = PackedVector2Array(58, 56, 80, 79, 80, 79, 63, 107, 63, 107, 33, 93, 33, 93, 52, 58, 52, 58, 56, 59, 56, 59)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
+position = Vector2(60, 82)
+scale = Vector2(2.71875, 3.53125)
+sprite_frames = SubResource("SpriteFrames_lk62g")
+animation = &"run"
+frame = 4
+frame_progress = 0.535813
+script = ExtResource("3_syqn5")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 119.0
+offset_top = 72.0
+offset_right = 416.0
+offset_bottom = 155.0
+theme_override_colors/font_color = Color(0.818219, 0.259438, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.722951, 0, 0.332951, 1)
+theme_override_colors/font_outline_color = Color(0.971618, 0, 0.165501, 1)
+theme_override_fonts/font = SubResource("SystemFont_ip41y")
+theme_override_font_sizes/font_size = 48
+text = "PAC-LAND"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 202.0
+offset_top = 146.0
+offset_right = 270.0
+offset_bottom = 182.0
+theme_override_colors/font_hover_pressed_color = Color(0.655917, 0, 0.198128, 1)
+theme_override_colors/font_pressed_color = Color(0.39801, 0.00182031, 0.864978, 1)
+theme_override_colors/font_color = Color(0.686469, 0.706955, 0.913368, 1)
+theme_override_colors/font_outline_color = Color(0.199634, 0.269607, 0.667631, 1)
+theme_override_fonts/font = SubResource("SystemFont_knx4o")
+theme_override_font_sizes/font_size = 20
+text = "START"
+script = ExtResource("5_pay8t")
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
