@@ -1,25 +1,27 @@
 extends CharacterBody2D
+class_name PacMan
 
+@export var speed = 175
+@export var current_dir = "None"
+@export var movement_direction := Vector2.ZERO
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+var velocity := Vector2()
+var inputs = {"right": Vector2.RIGHT,
+			"left": Vector2.LEFT,
+			"up": Vector2.UP,
+			"down": Vector2.DOWN}
 
+func get_input():
+	velocity = Vector2()
+	for input in inputs:
+		if Input.is_action_just_pressed(input):
+			current_dir = inputs
+			movement_direction = inputs[input]
 
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
+	velocity = movement_direction * speed
 
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
+func _physics_process(_delta):
+	get_input()
+	velocity = move_and_slide(velocity)
+	if velocity.length() < 1 and movement_direction != Vector2.ZERO:
+		movement_direction = Vector2.ZERO
