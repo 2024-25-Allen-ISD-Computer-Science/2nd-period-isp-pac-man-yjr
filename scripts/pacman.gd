@@ -1,79 +1,77 @@
 extends CharacterBody2D
+class_name PacMan
 
-class_name Player
+signal player_reset
+@export var speed := 175
+@export var current_dir = "none"
+@export var movement_direction := Vector2.ZERO
+var movement_enabled = false
 
-signal player_died(life: int)
-
-#variables
-var next_movement_direction = Vector2.ZERO
-var movement_direction = Vector2.ZERO
-var shape_query = PhysicsShapeQueryParameters2D.new()
-
-#export variables
-@export var speed = 300
-@export var start_position: Node2D
-@export var pacman_death_sound_player: AudioStreamPlayer2D
-@export var lifes: int = 2
-
-#onready variables
-@onready var direction_pointer = $DirectionPointer
-@onready var collision_shape_2d = $CollisionShape2D
-@onready var animation_player = $AnimationPlayer
-
-func reset_player():
-	animation_player.play("default")
-	position = start_position.position
-	set_physics_process(true)
-	next_movement_direction = Vector2.ZERO
-	movement_direction = Vector2.ZERO
-	
-func _physics_process(delta):
-	get_input()
-	
-	if movement_direction == Vector2.ZERO:
-		movement_direction = next_movement_direction
-	if can_move_in_direction(next_movement_direction, delta):
-		movement_direction = next_movement_direction
-	
-	velocity = movement_direction * speed
-	move_and_slide()
-	
+var vel := Vector2()
+var inputs = {"right": Vector2.RIGHT,
+			"left": Vector2.LEFT,
+			"up": Vector2.UP,
+			"down": Vector2.DOWN}
 
 func get_input():
-	
-	if Input.is_action_pressed("left"):
-		next_movement_direction = Vector2.LEFT
-		rotation_degrees = 0
-	elif  Input.is_action_pressed("right"):
-		next_movement_direction = Vector2.RIGHT
-		rotation_degrees = 180
-	elif Input.is_action_pressed("down"):
-		next_movement_direction = Vector2.DOWN
-		rotation_degrees = 270
-	elif Input.is_action_pressed("up"):
-		next_movement_direction = Vector2.UP
-		rotation_degrees = 90
+	if movement_enabled:
+		vel = Vector2()
+		for input in inputs:
+			if Input.is_action_just_pressed(input):
+				current_dir = input
+				movement_direction = inputs[input]
+				animate_movement()
+		
+		vel = movement_direction * speed
 
-func can_move_in_direction(dir: Vector2, delta: float) -> bool:
-	shape_query.transform = global_transform.translated(dir * speed * delta * 2)
-	var result = get_world_2d().direct_space_state.intersect_shape(shape_query)
-	return result.size() == 0	
+
+func animate_movement():
+	$Sprite2D.play("eating")
+	match current_dir:
+		"right":
+			$Sprite2D.rotation_degrees = 0
+			$Sprite2D.flip_h = false
+		"left":
+			$Sprite2D.rotation_degrees = 0
+			$Sprite2D.flip_h = true
+		"up":
+			$Sprite2D.rotation_degrees = -90
+			$Sprite2D.flip_h = false
+		"down":
+			$Sprite2D.rotation_degrees = 90
+			$Sprite2D.flip_h = false
+
 
 func die():
+	movement_enabled = false
+	$Sprite2D.play("die")
+	$Dead.play()
+	var _d = $Sprite2D.connect("animation_finished", Callable(self, "reset"))
 
-	if !pacman_death_sound_player.playing:
-		pacman_death_sound_player.play()
-	animation_player.play("death")
-	set_physics_process(false)
 
-func _on_animation_player_animation_finished(anim_name):
-		
-	if anim_name == "death":
-		lifes -= 1
-		player_died.emit(lifes)
-		if lifes != 0:
-			
-			reset_player()
-		else:
-			position = start_position.position
-			set_collision_layer_value(1, false)
+func _physics_process(_delta):
+	if !movement_enabled:
+		return
+	
+	get_input()
+	set_velocity(vel)
+	move_and_slide()
+	vel = vel
+	if vel.length() < 1 and movement_direction != Vector2.ZERO:
+		movement_direction = Vector2.ZERO
+		current_dir = "none"
+		$Sprite2D.playing = false
+
+
+func warp_to(pos):
+	global_position = pos
+
+
+func reset():
+	if $Sprite2D.is_connected("animation_finished", Callable(self, "reset")):
+		$Sprite2D.disconnect("animation_finished", Callable(self, "reset"))
+	position = Vector2(264, 212)
+	$Sprite2D.play("idle")
+	current_dir = "none"
+	movement_direction = Vector2.ZERO
+	emit_signal("player_reset")
